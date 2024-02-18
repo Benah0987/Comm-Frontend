@@ -1,49 +1,51 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './navbar.css'
+import './navbar.css';
+import video from '../images/video.png';
 
 function Navbar() {
   return (
-    <nav className="navbar navbar-expand-lg fixed-top bg-light navbar-light">
-      <div className="container">
-        <Link className="navbar-brand" to="/">
-          <img
-            id="MDB-logo"
-            src="https://mdbcdn.b-cdn.net/wp-content/uploads/2018/06/logo-mdb-jquery-small.png"
-            alt="MDB Logo"
-            draggable="false"
-            height="30"
-          />
-        </Link>
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-mdb-toggle="collapse"
-          data-mdb-target="#navbarSupportedContent"
-          aria-controls="navbarSupportedContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <i className="fas fa-bars"></i>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav ms-auto align-items-center">
-            <li className="nav-item">
-              <Link className="nav-link mx-2" to="/"><i className="fas fa-home pe-2"></i>Home</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link mx-2" to="/post"><i className="fas fa-plus-circle pe-2"></i>Post</Link>
-            </li>
-            <li className="nav-item">
-              <Link className="nav-link mx-2" to="/upload"><i className="fas fa-heart pe-2"></i>Upload</Link>
-            </li>
-            <li className="nav-item ms-3">
-              <Link className="btn btn-black btn-rounded" to="/signin">Sign in</Link>
-            </li>
-          </ul>
+    <div>
+      <nav className="navbar navbar-expand-lg navbar-light">
+        <div className="container-fluid">
+          <Link to="/" className="navbar-brand" style={{ color: 'blue', fontWeight: 'bold' }}>
+            {/* You can add your image here */}
+            <img src={video} alt="Family of Yahweh Logo" style={{ marginRight: '10px' }} />
+            Comm
+          </Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span className="navbar-toggler-icon"></span>
+          </button>
+          <div className="collapse navbar-collapse" id="navbarNav">
+            <ul className="navbar-nav ms-auto mb-4 mb-lg-0">
+              <li className="nav-item">
+                <Link to="/" className="nav-link" style={{ color: 'black' }}>
+                  <i className="fas fa-home"></i> Home
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/upload" className="nav-link" style={{ color: 'black' }}>
+                  <i className="fas fa-upload"></i> Post 
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to="/signup" className="nav-link" style={{ color: 'black' }}>
+                  <i className="fas fa-user-plus"></i> SignUp
+                </Link>
+              </li>
+            </ul>
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 
