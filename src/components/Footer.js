@@ -3,7 +3,7 @@ import './footer.css'
 
 function Footer() {
   return (
-    <footer style={{  backgroundColor: '#3f51b5', color: 'white', marginTop: '20px', position: 'absolute', bottom: '0', width: '100%' }}>
+    <footer style={{  backgroundColor: '#000', color: 'white', marginTop: '20px', bottom: '0', width: '100%' }}>
       <div className="container py-5">
         <div className="row">
           <div className="col-md-2">
