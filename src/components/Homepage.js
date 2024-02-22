@@ -76,6 +76,8 @@ function Homepage() {
           
           <p className="text-center italicized-text larger-font text-white">
             In communication, a speaker's word only count for a small percentage of his or her effort. The pitch and tone of the voice, the speed and rhythm of the spoken words, and the pauses between those words may tell more than what is being communicated.
+            <br/>
+            "Communication: 7% words, 38% tone, 55% body language. From 'Never Split the Difference', maximize impact, minimize words."
           </p>
 
           <Tab.Container activeKey={activeTab} onSelect={key => setActiveTab(key)}>

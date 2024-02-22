@@ -1,23 +1,21 @@
 .video-header {
   position: relative;
   background-color: white;
-  height: 100%; /* Change to height: auto; to make it responsive */
+  height: 500px; /* Set a fixed height for the video header */
   overflow: hidden; /* Hide overflow content */
   display: flex; /* Use flexbox for layout */
-  justify-content: center; /* Center align the video */
-  align-items: center; /* Center align the video vertically */
+  justify-content: flex-end; /* Align items to the end (right) */
+  margin-top: 16px;
   font-size: 25px;
 }
 
 .video-header video {
-  max-width: 100%; /* Make the video responsive */
-  height: auto; /* Make the video responsive */
+  max-width: calc(150% - 400px); /* Adjust the width of the video */
+  height: 100%; /* Ensure the video fills the container vertically */
   object-fit: cover; /* Ensure the video fills its container */
   margin-top: 8px;
-  margin-bottom: 12px;
-  
+  margin-bottom :12px;
 }
-
 
 .controls {
   position: absolute;
@@ -111,4 +109,28 @@ background:  #3f51b5 ;
 .btn:hover {
   background-color: blue;
   color: orange;
+}
+
+@media (max-width: 768px) {
+  .video-header {
+    height: auto; /* Change to auto to make it responsive */
+    justify-content: center; /* Center align the video horizontally */
+    align-items: center; /* Center align the video vertically */
+  }
+
+  .video-header video {
+    max-width: 100%; /* Make the video responsive */
+    height: auto; /* Make the video responsive */
+  }
+}@media (max-width: 768px) {
+  .video-header {
+    height: auto; /* Change to auto to make it responsive */
+    justify-content: center; /* Center align the video horizontally */
+    align-items: center; /* Center align the video vertically */
+  }
+
+  .video-header video {
+    max-width: 100%; /* Make the video responsive */
+    height: auto; /* Make the video responsive */
+  }
 }

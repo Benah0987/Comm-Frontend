@@ -46,7 +46,7 @@ function Footer() {
                 <a href="https://www.instagram.com/wanyoike_benayah/" target="_blank" rel="noreferrer" className="text-white me-4 social-icon-hover">
                   <i className="fab fa-instagram"></i>
                 </a>
-                <a href="www.linkedin.com/in/benayah-wanyoike-9a3192236" target="_blank" rel="noreferrer" className="text-white me-4 social-icon-hover">
+                <a href="https://www.linkedin.com/in/benayah-wanyoike-9a3192236" target="_blank" rel="noreferrer" className="text-white me-4 social-icon-hover">
                   <i className="fab fa-linkedin"></i>
                 </a>
                 <a href="https://github.com/Benah0987" target="_blank" rel="noreferrer" className="text-white me-4 social-icon-hover">
