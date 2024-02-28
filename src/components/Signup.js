@@ -1,12 +1,12 @@
 
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { AuthContext } from './AuthContext'; // Assuming correct path
 import './login.css';
 
 function Signup() {
   const { signup } = useContext(AuthContext);
-  const navigate = useNavigate();
+  
 
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function Signup() {
     e.preventDefault();
     try {
       await signup(username, email, password);
-      navigate('/login'); // Redirect after successful signup
+       // Redirect after successful signup
     } catch (error) {
       console.error('Failed to sign up:', error);
       // Handle error state (e.g., display an error message)
@@ -51,6 +51,8 @@ function Signup() {
                       <div className="text-center d-flex justify-content-between mt-4">
                         <p>website by <a href="https://portfolio-five-blush-84.vercel.app/" className="font-italic text-muted">
                           <u>Benayah</u></a></p>
+                        {/* Updated message with Link component for navigation to /login */}
+                        <p className="font-italic text-muted">Already have an account? <Link to="/login">Login</Link></p>
                       </div>
                     </form>
                   </div>

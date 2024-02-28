@@ -1,52 +1,67 @@
-import React, { useContext, useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-
-import './login.css'
+import { AuthContext } from './AuthContext'; // Assuming correct path
+import './login.css';
 
 function Login() {
-    const { login } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
+  
 
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        login(email, password);
-        // Clear the form fields after submission5
-        setPassword('');
-        setEmail('');
-    };
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+        const user = await login(email, password);
+        // Redirect after successful login
+        
+        console.log('Logged in user:', user);
+    } catch (error) {
+        console.error('Failed to log in:', error);
+        // Handle error state (e.g., display an error message)
+    }
+};
 
-    return (
-        <div className='login template 100-w vh-100'>
-            <div className='70-w p-5 rounded bg-white mx-3 mx-sm-1' style={{ width: '40%' }}>
-                <form onSubmit={handleSubmit}>
-                    <h3 className='text-center'>Log In</h3>
-                    <div className='mb-2'>
-                        <label htmlFor='email'>Email</label>
-                        <input type='email' placeholder='Enter email' className='form-control' value={email} onChange={(e) => setEmail(e.target.value)} />
-                    </div>
-                    <div className='mb-2'>
-                        <label htmlFor='password'>Password</label>
-                        <input type='password' placeholder='Enter Password' className='form-control' value={password} onChange={(e) => setPassword(e.target.value)} />
-                    </div>
-                    <div className='mb-2'>
-                        <input type='checkbox' className='custom-control custom-checkbox' id='check' />
-                        <label htmlFor='check' className='custom-input-label ms-2'>Remember Me?</label>
-                    </div>
-                    <div className='d-grid'>
-                        <button style={{ backgroundColor: '#FFC244FF', borderColor: '#FFC244FF' }} className='btn btn-primary'>Log in</button>
-                    </div>
-                    <div className='d-flex justify-content-between mt-2'>
-                        <p className='text-end'>
-                            Forgot <a style={{ color: '#00a082ff' }} href=''>Password?</a>
-                        </p>
-                        <Link to='/signup' style={{ color: '#00a082ff' }} className='ms-2'>Sign Up</Link>
-                    </div>
-                </form>
+
+  return (
+    <div>
+      <div className="container-fluid">
+        <div className="row no-gutter">
+          {/* The image half */}
+          <div className="col-md-6 d-none d-md-flex bg-image"></div>
+          {/* The content half */}
+          <div className="col-md-6 bg-light">
+            <div className="login d-flex align-items-center py-5">
+              <div className="container">
+                <div className="row">
+                  <div className="col-lg-10 col-xl-7 mx-auto">
+                    <h3 className="display-4">Log In</h3>
+                    <p className="text-muted mb-4">Welcome back!</p>
+                    <form onSubmit={handleLogin}>
+                      <div className="form-group mb-3">
+                        <input id="inputEmail" type="email" placeholder="Email address" required className="form-control rounded-pill border-0 shadow-sm px-4" value={email} onChange={(e) => setEmail(e.target.value)} />
+                      </div>
+                      <div className="form-group mb-3">
+                        <input id="inputPassword" type="password" placeholder="Password" required className="form-control rounded-pill border-0 shadow-sm px-4 text-primary" value={password} onChange={(e) => setPassword(e.target.value)} />
+                      </div>
+                      <button type="submit" className="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Log in</button>
+                      <div className="text-center d-flex justify-content-between mt-4">
+                        <p>website by <a href="https://portfolio-five-blush-84.vercel.app/" className="font-italic text-muted">
+                          <u>Benayah</u></a></p>
+                        {/* Updated message with Link component for navigation to /login */}
+                        <p className="font-italic text-muted">Register as a New User? <Link to="/signup">SignUp</Link></p>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              </div>
             </div>
+          </div>
         </div>
-    );
+      </div>
+    </div>
+  );
 }
 
 export default Login;
