@@ -1,22 +1,22 @@
-import React, { useState, useEffect, useContext} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from './AuthContext'; // Import AuthProvider
+import './upload.css'
 
 function Upload() {
   const { currentUser } = useContext(AuthContext);
-
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     videoFile: null,
   });
-  // const [videoUrl, setVideoUrl] = useState('');
   const [userVideos, setUserVideos] = useState([]);
 
   useEffect(() => {
-    // Fetch user's videos when the component mounts
     fetchUserVideos();
-  }, [])
+  }, []);
 
   const fetchUserVideos = async () => {
     try {
@@ -49,64 +49,76 @@ function Upload() {
     }
   };
 
+  const [isUploading, setIsUploading] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value, files } = e.target;
     setFormData({
       ...formData,
-      [name]: name === 'videoFile' ? files[0] : value,
+      [name]: files ? files[0] : value,
     });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-  
+    setIsUploading(true); // Start uploading
+
     const formDataToSend = new FormData();
     formDataToSend.append('title', formData.title);
     formDataToSend.append('description', formData.description);
     formDataToSend.append('video_file', formData.videoFile);
-  
-    // ...
-try {
-  const response = await fetch('http://127.0.0.1:3000/videos', {
-    method: 'POST',
-    headers: {
-      "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-    },
-    body: formDataToSend,
-  });
 
-  if (response.ok) {
-    Swal.fire({
-      title: 'Success!',
-      text: 'Video uploaded successfully',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    });
-    // Update user's videos after successful upload
-    fetchUserVideos();
-  } else {
-    Swal.fire({
-      title: 'Error!',
-      text: 'Error uploading video',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-} catch (error) {
-  console.error('Error uploading video:', error);
-  Swal.fire({
-    title: 'Error!',
-    text: 'Network error or server is down',
-    icon: 'error',
-    confirmButtonText: 'OK'
-  });
-}
-// ...
+    const xhr = new XMLHttpRequest();
 
+    xhr.open('POST', 'http://127.0.0.1:3000/videos', true);
+    xhr.setRequestHeader("Authorization", `Bearer ${localStorage.getItem("jwtToken")}`);
+
+    xhr.upload.onprogress = function(event) {
+      if (event.lengthComputable) {
+        const progress = (event.loaded / event.total) * 100;
+        setUploadProgress(progress);
+      }
+    };
+
+    xhr.onload = function() {
+      setIsUploading(false); // Stop uploading
+      if (xhr.status === 200) {
+        Swal.fire({
+          title: 'Success!',
+          text: 'Video uploaded successfully',
+          icon: 'success',
+          confirmButtonText: 'OK'
+        });
+        fetchUserVideos(); // Refresh the list of videos
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'Error uploading video',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+      setUploadProgress(0); // Reset progress
+    };
+
+    xhr.onerror = function() {
+      setIsUploading(false); // Stop uploading
+      console.error('Error uploading video:', xhr.responseText);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Network error or server is down',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+      setUploadProgress(0); // Reset progress
+    };
+
+    xhr.send(formDataToSend);
   };
-  
-  
 
+  const handleVideoSelection = (videoUrl) => {
+    setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
+  };
   return (
     <div>
       <section className="vh-100" style={{ backgroundColor: '#2779e2' }}>
@@ -137,16 +149,33 @@ try {
                     <hr className="mx-n3" />
                     <div className="row align-items-center py-3">
                       <div className="col-md-3 ps-5">
-                        <h6 className="mb-0">Video File</h6>a
+                        <h6 className="mb-0">Video File</h6>
                       </div>
                       <div className="col-md-9 pe-5">
                         <input className="form-control form-control-lg" id="videoFile" type="file" name="videoFile" onChange={handleInputChange} />
-                        <div className="small text-muted mt-2">Upload your video file</div>
+                        <div className="small text-muted mt-2">Upload your video file here</div>
                       </div>
                     </div>
                     <hr className="mx-n3" />
                     <div className="px-5 py-4">
-                      <button type="submit" className="btn btn-primary btn-lg">Upload Video</button> {/* This button triggers form submission */}
+                    {/* Conditional rendering for progress bar */}
+                    {isUploading && (
+                      <div className="progress" style={{ marginBottom: '1rem' }}>
+                        <div
+                          className="progress-bar"
+                          role="progressbar"
+                          style={{ width: `${uploadProgress}%` }}
+                          aria-valuenow={uploadProgress}
+                          aria-valuemin="0"
+                          aria-valuemax="100"
+                        >
+                          {Math.round(uploadProgress)}%
+                        </div>
+                      </div>
+                    )}
+                    <button type="submit" className="btn btn-primary btn-lg">
+                      {isUploading ? 'Uploading...' : 'Upload Video'}
+                    </button>
                     </div>
                   </form>
                 </div>
@@ -154,24 +183,31 @@ try {
             </div>
           </div>
         </div>
+        
       </section>
-
       
-     
-          {/* Display user's videos using currentUser.videos */}
-    <div className="video-preview-container mt-5">
-      <h3>User Videos</h3>
-      {currentUser && currentUser.videos && currentUser.videos.map(video => (
-        <div key={video.id}>
-          <h4>{video.title}</h4>
-          <video width="100%" controls>
-            <source src={`http://127.0.0.1:3000${video.video_url}`} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
-        </div>
-      ))}
-    </div>
 
+      {/* Display user's videos */}
+      
+      <div className="video-preview-container mt-5">
+        <div className="video-list">
+          <h3>{currentUser && currentUser.name ? `${currentUser.name}'s Videos` : 'User Videos'}</h3>
+          {currentUser && currentUser.videos && currentUser.videos.map(video => (
+            <div className="video-item" key={video.id} onClick={() => handleVideoSelection(video.video_url)}>
+              <h4>{video.title}</h4>
+            </div>
+          ))}
+        </div>
+
+        {selectedVideoUrl && (
+          <div className="video-player">
+            <video width="100%" controls key={selectedVideoUrl}>
+              <source src={selectedVideoUrl} type="video/mp4" />
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        )}
+      </div>
 
     </div>
   );

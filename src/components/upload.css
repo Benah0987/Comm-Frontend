@@ -1,0 +1,34 @@
+.video-preview-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center items vertically */
+  }
+  
+  .video-list {
+    width: 80%; /* Adjust the width as needed */
+    border: 1px solid #000; /* Add border */
+    border-radius: 5px; /* Add border radius for a rounded look */
+    padding: 10px; /* Add padding for spacing */
+    margin-bottom: 20px; /* Add margin to separate from other elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .video-list h3 {
+    margin-bottom: 10px; /* Add space between heading and video list */
+  }
+  
+  .video-item {
+    cursor: pointer; /* Change cursor to pointer on hover */
+    margin-bottom: 5px; /* Add space between video items */
+  }
+  
+  .video-player {
+    width: 80%; /* Adjust the width as needed */
+    max-width: 800px; /* Limit maximum width to prevent it from being too large */
+    border: 1px solid #ccc; /* Add border */
+    border-radius: 5px; /* Add border radius for a rounded look */
+    margin-bottom: 20px; /* Add margin to separate from other elements */
+  }
+  
