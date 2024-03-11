@@ -34,6 +34,7 @@ function Homepage() {
                   <li>Impacted my professional development</li>
                   <li>Hindered my ability to form meaningful relationships</li>
                   <li>Caused missed opportunities for romantic connections</li>
+                  <li>Not understanding how important negotiating skills are important in life</li>
                 </ul>
                 <p>But amidst these challenges, I've found guidance and inspiration in the transformative teachings of Vinh Giang, a keynote speaker whose insights have reshaped the way we perceive effective communication.</p>
 
@@ -53,7 +54,7 @@ function Homepage() {
         </div>
         <div className="col-md-6">
           <header className="video-header">
-            <video id="myVideo" playsInline autoPlay loop muted>
+            <video id="myVideo" playsInline autoPlay loop>
               <source src={videoSrc} type="video/mp4" />
               Your browser does not support the video tag.
             </video>

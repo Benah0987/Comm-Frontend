@@ -13,9 +13,13 @@ function Upload() {
     videoFile: null,
   });
   const [userVideos, setUserVideos] = useState([]);
+  const [questions, setQuestions] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState('');
+
 
   useEffect(() => {
     fetchUserVideos();
+    fetchQuestions(); // Fetch questions initially
   }, []);
 
   const fetchUserVideos = async () => {
@@ -119,6 +123,34 @@ function Upload() {
   const handleVideoSelection = (videoUrl) => {
     setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
   };
+// 
+
+const fetchQuestions = async (type) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/questions/${type}`, {
+      method: 'GET',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to fetch questions');
+    }
+
+    const { questions } = await response.json();
+    console.log(questions); // Log the fetched questions for debugging
+
+    // Assuming the response contains an array of categories and questions
+    setQuestions(questions);
+  } catch (error) {
+    console.error('Error fetching questions:', error);
+  }
+};
+
+
+
   return (
     <div>
       <section className="vh-100" style={{ backgroundColor: '#2779e2' }}>
@@ -191,7 +223,7 @@ function Upload() {
       
       <div className="video-preview-container mt-5">
         <div className="video-list">
-          <h3>{currentUser && currentUser.name ? `${currentUser.name}'s Videos` : 'User Videos'}</h3>
+          <h3>{currentUser && currentUser.name ? `${currentUser.name}'s Videos` :'My Videos'}</h3>
           {currentUser && currentUser.videos && currentUser.videos.map(video => (
             <div className="video-item" key={video.id} onClick={() => handleVideoSelection(video.video_url)}>
               <h4>{video.title}</h4>
@@ -208,8 +240,32 @@ function Upload() {
           </div>
         )}
       </div>
-
+      
+        {/* Question category buttons */}
+        // Inside your JSX component
+    <div className="category-buttons">
+      <button onClick={() => fetchQuestions('video')}>Video Questions</button>
+      <button onClick={() => fetchQuestions('audio')}>Audio Questions</button>
     </div>
+
+
+      {/* Display questions */}
+      {questions.length > 0 && (
+        <div className="question-container">
+          {questions.map((category, index) => (
+            <div className="category" key={index}>
+              <h3>{category.category}</h3>
+              {category.questions.map((question, questionIndex) => (
+                <div className="question-item" key={questionIndex}>
+                  <p>Question: {question}</p>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
+      
+  </div>
   );
 }
 
