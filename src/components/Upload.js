@@ -19,7 +19,7 @@ function Upload() {
 
   useEffect(() => {
     fetchUserVideos();
-    fetchQuestions(); // Fetch questions initially
+    
   }, []);
 
   const fetchUserVideos = async () => {
@@ -124,31 +124,24 @@ function Upload() {
     setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
   };
 // 
-
-const fetchQuestions = async (type) => {
+const fetchAllQuestions = async () => {
   try {
-    const response = await fetch(`http://127.0.0.1:3000/questions/${type}`, {
+    const response = await fetch('http://127.0.0.1:3000/questions', {
       method: 'GET',
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
         'Content-Type': 'application/json',
       },
     });
-
     if (!response.ok) {
-      throw new Error('Failed to fetch questions');
+      throw new Error('Network response was not ok');
     }
-
-    const { questions } = await response.json();
-    console.log(questions); // Log the fetched questions for debugging
-
-    // Assuming the response contains an array of categories and questions
-    setQuestions(questions);
+    const data = await response.json();
+    setQuestions(data);
   } catch (error) {
-    console.error('Error fetching questions:', error);
+    console.error('There has been a problem with your fetch operation:', error);
   }
 };
-
 
 
   return (
@@ -242,30 +235,28 @@ const fetchQuestions = async (type) => {
       </div>
       
         {/* Question category buttons */}
-        // Inside your JSX component
-    <div className="category-buttons">
-      <button onClick={() => fetchQuestions('video')}>Video Questions</button>
-      <button onClick={() => fetchQuestions('audio')}>Audio Questions</button>
-    </div>
-
+       <div className="category-buttons">
+           <button onClick={fetchAllQuestions}>Fetch All Questions</button>
+        </div>
 
       {/* Display questions */}
-      {questions.length > 0 && (
-        <div className="question-container">
-          {questions.map((category, index) => (
-            <div className="category" key={index}>
-              <h3>{category.category}</h3>
-              {category.questions.map((question, questionIndex) => (
-                <div className="question-item" key={questionIndex}>
-                  <p>Question: {question}</p>
-                </div>
+      {questions.map((question, index) => (
+        <div key={index}>
+          <h4>{question.category}</h4>
+          {Array.isArray(question.maswali) ? (
+            <ul>
+              {question.maswali.map((q, qIndex) => (
+                <li key={qIndex}>{q}</li>
               ))}
-            </div>
-          ))}
+            </ul>
+          ) : (
+            <p>No questions available for this category</p>
+          )}
         </div>
-      )}
+      ))}
+    </div>
       
-  </div>
+  
   );
 }
 
