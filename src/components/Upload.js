@@ -7,6 +7,9 @@ function Upload() {
   const { currentUser } = useContext(AuthContext);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
+  const [categories, setCategories] = useState([]);
+  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -124,24 +127,72 @@ function Upload() {
     setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
   };
 // 
-const fetchAllQuestions = async () => {
+// const fetchAllQuestions = async () => {
+//   try {
+//     const response = await fetch('http://127.0.0.1:3000/questions', {
+//       method: 'GET',
+//       headers: {
+//         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+//         'Content-Type': 'application/json',
+//       },
+//     });
+//     if (!response.ok) {
+//       throw new Error('Network response was not ok');
+//     }
+//     const data = await response.json();
+//     setQuestions(data);
+//   } catch (error) {
+//     console.error('There has been a problem with your fetch operation:', error);
+//   }
+// };
+
+useEffect(() => {
+  
+  fetchCategories();
+}, []);
+
+const fetchCategories = async () => {
   try {
-    const response = await fetch('http://127.0.0.1:3000/questions', {
-      method: 'GET',
+    const response = await fetch('http://127.0.0.1:3000/categories', {
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-        'Content-Type': 'application/json',
       },
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    setQuestions(data);
+    if (!response.ok) throw new Error('Failed to fetch categories');
+    const { categories } = await response.json();
+    setCategories(categories);
   } catch (error) {
-    console.error('There has been a problem with your fetch operation:', error);
+    Swal.fire('Error!', 'Could not fetch categories.', 'error');
+    console.error('Error fetching categories:', error);
   }
 };
+
+const fetchQuestionsForCategory = async (categoryId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/categories/${categoryId}/questions`, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+    if (!response.ok) throw new Error('Failed to fetch questions');
+    const data = await response.json();
+    setQuestions(data.questions); // Adjust according to your actual response structure
+  } catch (error) {
+    Swal.fire('Error!', 'Could not fetch questions for the selected category.', 'error');
+    console.error('Error fetching questions:', error);
+  }
+};
+
+const handleCategoryChange = (e) => {
+  const categoryId = e.target.value;
+  setSelectedCategoryId(categoryId);
+  if (categoryId) {
+    fetchQuestionsForCategory(categoryId);
+  } else {
+    setQuestions([]);
+  }
+};
+
 
 
   return (
@@ -235,26 +286,35 @@ const fetchAllQuestions = async () => {
       </div>
       
         {/* Question category buttons */}
-       <div className="category-buttons">
-           <button onClick={fetchAllQuestions}>Fetch All Questions</button>
+        <div className="category-selection">
+          <label htmlFor="categorySelect">Select a Category:</label>
+          <select id="categorySelect" value={selectedCategoryId || ''} onChange={handleCategoryChange}>
+            <option value="">Select a Category</option>
+            {/* Ensure categories is always an array */}
+            { (categories || []).map((category) => (
+              <option key={category.id} value={category.id}>{category.name}</option>
+            ))}
+          </select>
         </div>
 
-      {/* Display questions */}
-      {questions.map((question, index) => (
-        <div key={index}>
-          <h4>{question.category}</h4>
-          {Array.isArray(question.maswali) ? (
+
+        <div className="questions-list">
+          {/* Check if questions is defined and has length */}
+          {questions && questions.length > 0 ? (
             <ul>
-              {question.maswali.map((q, qIndex) => (
-                <li key={qIndex}>{q}</li>
+              {questions.map((question, index) => (
+                // It's generally better to use a unique id instead of index if available
+                <li key={question.id || index}>{question.questionText}</li>
               ))}
             </ul>
           ) : (
-            <p>No questions available for this category</p>
+            <p>No questions available for this category.</p>
           )}
         </div>
-      ))}
-    </div>
+
+
+      </div>
+    
       
   
   );
