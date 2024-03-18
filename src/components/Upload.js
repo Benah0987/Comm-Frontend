@@ -7,8 +7,8 @@ function Upload() {
   const { currentUser } = useContext(AuthContext);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
-  const [categories, setCategories] = useState([]);
-  const [selectedCategoryId, setSelectedCategoryId] = useState('');
+  const [comments, setComments] = useState([]);
+  
   
   const [formData, setFormData] = useState({
     title: '',
@@ -17,8 +17,9 @@ function Upload() {
   });
   const [userVideos, setUserVideos] = useState([]);
   const [questions, setQuestions] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState('');
-
+  const [selectedQuestionType, setSelectedQuestionType] = useState(null);
+  
+  
 
   useEffect(() => {
     fetchUserVideos();
@@ -124,74 +125,147 @@ function Upload() {
   };
 
   const handleVideoSelection = (videoUrl) => {
-    setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
+    // Assuming the videoUrl is something like "http://127.0.0.1:3000/videos/123"
+    // You want to extract the "123" part which is the ID
+    const videoId = videoUrl.split('/').pop(); // This splits the URL by '/' and gets the last part
+    setSelectedVideoUrl(videoId); // Set the extracted ID
   };
 // 
-// const fetchAllQuestions = async () => {
-//   try {
-//     const response = await fetch('http://127.0.0.1:3000/questions', {
-//       method: 'GET',
-//       headers: {
-//         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-//         'Content-Type': 'application/json',
-//       },
-//     });
-//     if (!response.ok) {
-//       throw new Error('Network response was not ok');
-//     }
-//     const data = await response.json();
-//     setQuestions(data);
-//   } catch (error) {
-//     console.error('There has been a problem with your fetch operation:', error);
-//   }
-// };
-
-useEffect(() => {
-  
-  fetchCategories();
-}, []);
-
-const fetchCategories = async () => {
+const fetchQuestions = async (questionType) => {
   try {
-    const response = await fetch('http://127.0.0.1:3000/categories', {
+    const response = await fetch(`http://127.0.0.1:3000/questions?question_type=${questionType}`, {
+      method: 'GET',
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
       },
     });
-    if (!response.ok) throw new Error('Failed to fetch categories');
-    const { categories } = await response.json();
-    setCategories(categories);
-  } catch (error) {
-    Swal.fire('Error!', 'Could not fetch categories.', 'error');
-    console.error('Error fetching categories:', error);
-  }
-};
 
-const fetchQuestionsForCategory = async (categoryId) => {
-  try {
-    const response = await fetch(`http://127.0.0.1:3000/categories/${categoryId}/questions`, {
-      headers: {
-        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-      },
-    });
-    if (!response.ok) throw new Error('Failed to fetch questions');
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
     const data = await response.json();
-    setQuestions(data.questions); // Adjust according to your actual response structure
+    setQuestions(data);
   } catch (error) {
-    Swal.fire('Error!', 'Could not fetch questions for the selected category.', 'error');
-    console.error('Error fetching questions:', error);
+    console.error('There has been a problem with your fetch operation:', error);
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to fetch questions',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
   }
 };
 
-const handleCategoryChange = (e) => {
-  const categoryId = e.target.value;
-  setSelectedCategoryId(categoryId);
-  if (categoryId) {
-    fetchQuestionsForCategory(categoryId);
-  } else {
-    setQuestions([]);
+const handleQuestionTypeChange = (questionType) => {
+  setSelectedQuestionType(questionType);
+  fetchQuestions(questionType);
+  setSelectedCategory(null); // Reset selected category when question type changes
+};
+
+const [selectedCategory, setSelectedCategory] = useState(null);
+
+// Function to handle category selection
+const handleCategorySelect = (category) => {
+  setSelectedCategory(selectedCategory === category ? null : category);
+};
+// commments 
+const fetchComments = async (videoId) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
+      method: 'GET',
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    setComments(data.comments);
+  } catch (error) {
+    console.error('Error fetching comments:', error);
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to fetch comments',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
   }
 };
+
+const handleViewCommentsButtonClick = () => {
+  if (selectedVideoUrl) {
+    fetchComments(selectedVideoUrl); // Fetch comments for the selected video
+  } else {
+    Swal.fire({
+      title: 'Error!',
+      text: 'No video selected',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  }
+};
+
+
+const handlePostCommentButtonClick = async () => {
+  const { value: text } = await Swal.fire({
+    title: 'Post a comment',
+    input: 'textarea',
+    inputLabel: 'Your comment',
+    inputPlaceholder: 'Type your comment here...',
+    inputAttributes: {
+      'aria-label': 'Type your comment here'
+    },
+    showCancelButton: true
+  });
+
+  if (text) { // Ensures text is not null or empty
+    try {
+      const videoId = selectedVideoUrl; // Assuming this contains the video's ID
+      
+      // Sets up the endpoint for posting comments
+      const commentPostUrl = `http://127.0.0.1:3000/videos/${videoId}/comments`;
+
+      // Executes the POST request to submit the comment
+      const response = await fetch(commentPostUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`, // Presuming JWT is used for auth
+        },
+        body: JSON.stringify({ comment: { text } }), // Structuring the payload as expected by the server
+      });
+
+      if (!response.ok) { // Checks if the request was unsuccessful
+        throw new Error('Failed to post comment.');
+      }
+
+      // Assuming the server responds with the created comment
+      const data = await response.json();
+      setComments(prevComments => [...prevComments, data.comment]); // Adds the new comment to the local state
+
+      // Shows success message
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your comment has been posted.',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    } catch (error) { // Catches and handles any error
+      console.error('Error posting comment:', error);
+      // Displays an error message
+      Swal.fire({
+        title: 'Error!',
+        text: 'There was a problem posting your comment. Please try again.',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  }
+};
+
+
 
 
 
@@ -285,32 +359,70 @@ const handleCategoryChange = (e) => {
         )}
       </div>
       
-        {/* Question category buttons */}
-        <div className="category-selection">
-          <label htmlFor="categorySelect">Select a Category:</label>
-          <select id="categorySelect" value={selectedCategoryId || ''} onChange={handleCategoryChange}>
-            <option value="">Select a Category</option>
-            {/* Ensure categories is always an array */}
-            { (categories || []).map((category) => (
-              <option key={category.id} value={category.id}>{category.name}</option>
-            ))}
-          </select>
-        </div>
+        {/* Category Selection Buttons */}
+        <div className="video-selection-section">
+        <button onClick={() => handleQuestionTypeChange('audio')} className={`btn ${selectedQuestionType === 'audio' ? 'btn-active' : 'btn-inactive'}`}>
+          <i className="fas fa-volume-up"></i> Audio Questions
+        </button>
+        <button onClick={() => handleQuestionTypeChange('video')} className={`btn ${selectedQuestionType === 'video' ? 'btn-active' : 'btn-inactive'}`}>
+          <i className="fas fa-video"></i> Video Questions
+        </button>
+      </div>
 
+      {/* Category Selection Buttons */}
+      <div className="category-selection-buttons">
+        {selectedQuestionType && Object.entries(questions.reduce((acc, question) => {
+          if (!acc[question.category]) {
+            acc[question.category] = [];
+          }
+          acc[question.category].push(question);
+          return acc;
+        }, {})).map(([category, _questionsInCategory]) => (
+          <button key={category} onClick={() => handleCategorySelect(category)} className={`btn ${selectedCategory === category ? 'btn-active' : 'btn-inactive'}`}>
+            {category}
+          </button>
+        ))}
+      </div>
 
+      {/* Display Questions for the Selected Category */}
+      {selectedCategory && (
         <div className="questions-list">
-          {/* Check if questions is defined and has length */}
-          {questions && questions.length > 0 ? (
-            <ul>
-              {questions.map((question, index) => (
-                // It's generally better to use a unique id instead of index if available
-                <li key={question.id || index}>{question.questionText}</li>
+          <h4>{selectedCategory}</h4>
+          <ul>
+            {questions
+              .filter(question => question.category === selectedCategory)
+              .map((question, index) => (
+                <li key={index}>{question.maswali}</li>
               ))}
-            </ul>
-          ) : (
-            <p>No questions available for this category.</p>
-          )}
+          </ul>
         </div>
+      )}
+
+      {/* Button to view comments */}
+      <div className="comment-button-container">
+        <button onClick={handleViewCommentsButtonClick} className="btn btn-primary">
+          View Comments
+        </button>
+      </div>
+
+      {/* Button to post a comment */}
+      <div className="comment-button-container">
+        <button onClick={handlePostCommentButtonClick} className="btn btn-primary">
+          Post Comment
+        </button>
+      </div>
+
+      {/* Display Comments */}
+      {comments.length > 0 && (
+        <div className="comments-section">
+          <h4>Comments</h4>
+          <ul>
+            {comments.map((comment, index) => (
+              <li key={index}>{comment.text}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
 
       </div>
