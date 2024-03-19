@@ -125,10 +125,7 @@ function Upload() {
   };
 
   const handleVideoSelection = (videoUrl) => {
-    // Assuming the videoUrl is something like "http://127.0.0.1:3000/videos/123"
-    // You want to extract the "123" part which is the ID
-    const videoId = videoUrl.split('/').pop(); // This splits the URL by '/' and gets the last part
-    setSelectedVideoUrl(videoId); // Set the extracted ID
+    setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
   };
 // 
 const fetchQuestions = async (questionType) => {
@@ -169,9 +166,9 @@ const handleCategorySelect = (category) => {
   setSelectedCategory(selectedCategory === category ? null : category);
 };
 // commments 
-const fetchComments = async (videoId) => {
+const fetchComments = async (videoUrl) => {
   try {
-    const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
+    const response = await fetch(`http://127.0.0.1:3000/videos/${videoUrl}/comments`, {
       method: 'GET',
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -207,7 +204,6 @@ const handleViewCommentsButtonClick = () => {
   }
 };
 
-
 const handlePostCommentButtonClick = async () => {
   const { value: text } = await Swal.fire({
     title: 'Post a comment',
@@ -220,51 +216,48 @@ const handlePostCommentButtonClick = async () => {
     showCancelButton: true
   });
 
-  if (text) { // Ensures text is not null or empty
+  // Check if the text is not null or empty
+  if (text) {
     try {
-      const videoId = selectedVideoUrl; // Assuming this contains the video's ID
-      
-      // Sets up the endpoint for posting comments
-      const commentPostUrl = `http://127.0.0.1:3000/videos/${videoId}/comments`;
-
-      // Executes the POST request to submit the comment
-      const response = await fetch(commentPostUrl, {
+      const videoId = selectedVideoUrl; // Assuming `selectedVideoUrl` holds the ID of the currently selected video.
+      const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`, // Presuming JWT is used for auth
+          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`, // Assuming you're using JWT for authentication
         },
-        body: JSON.stringify({ comment: { text } }), // Structuring the payload as expected by the server
+        body: JSON.stringify({
+          comment: {
+            text: text // Assuming your backend expects the key to be `text` within a `comment` object
+          }
+        }),
       });
 
-      if (!response.ok) { // Checks if the request was unsuccessful
-        throw new Error('Failed to post comment.');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
       }
 
-      // Assuming the server responds with the created comment
+      // Assuming the backend returns the newly created comment
       const data = await response.json();
-      setComments(prevComments => [...prevComments, data.comment]); // Adds the new comment to the local state
+      setComments([...comments, data.comment]); // Update the local state to display the new comment
 
-      // Shows success message
       Swal.fire({
         title: 'Success!',
-        text: 'Your comment has been posted.',
+        text: 'Your comment has been posted',
         icon: 'success',
         confirmButtonText: 'OK'
       });
-    } catch (error) { // Catches and handles any error
+    } catch (error) {
       console.error('Error posting comment:', error);
-      // Displays an error message
       Swal.fire({
         title: 'Error!',
-        text: 'There was a problem posting your comment. Please try again.',
+        text: 'Failed to post comment',
         icon: 'error',
         confirmButtonText: 'OK'
       });
     }
   }
 };
-
 
 
 
