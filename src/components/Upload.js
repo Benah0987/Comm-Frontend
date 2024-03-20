@@ -8,6 +8,7 @@ function Upload() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
   const [comments, setComments] = useState([]);
+  const [selectedVideoId, setSelectedVideoId] = useState('');
   
   
   const [formData, setFormData] = useState({
@@ -125,8 +126,20 @@ function Upload() {
   };
 
   const handleVideoSelection = (videoUrl) => {
+    // Extract video ID from the URL
+    const videoId = extractVideoId(videoUrl); // You need to define a function to extract the ID
+    setSelectedVideoId(videoId);
     setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
   };
+  
+  // Function to extract the video ID from the URL
+  const extractVideoId = (videoUrl) => {
+    // Implement the logic to extract the ID from the URL
+    // For example, if your URL format is '/videos/{videoId}', you can extract the ID like this:
+    const parts = videoUrl.split('/');
+    return parts[parts.length - 1];
+  };
+  
 // 
 const fetchQuestions = async (questionType) => {
   try {
@@ -166,9 +179,10 @@ const handleCategorySelect = (category) => {
   setSelectedCategory(selectedCategory === category ? null : category);
 };
 // commments 
-const fetchComments = async (videoUrl) => {
+
+const fetchComments = async () => {
   try {
-    const response = await fetch(`http://127.0.0.1:3000/videos/${videoUrl}/comments`, {
+    const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
       method: 'GET',
       headers: {
         "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
@@ -191,9 +205,48 @@ const fetchComments = async (videoUrl) => {
   }
 };
 
+// Post Comment Function
+const postComment = async (text) => {
+  try {
+    const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+      },
+      body: JSON.stringify({
+        text: text
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+    setComments([...comments, data.comment]); // Assuming the backend returns the newly created comment
+
+    Swal.fire({
+      title: 'Success!',
+      text: 'Your comment has been posted',
+      icon: 'success',
+      confirmButtonText: 'OK'
+    });
+  } catch (error) {
+    console.error('Error posting comment:', error);
+    Swal.fire({
+      title: 'Error!',
+      text: 'Failed to post comment',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  }
+};
+
+// Function to handle viewing comments
 const handleViewCommentsButtonClick = () => {
-  if (selectedVideoUrl) {
-    fetchComments(selectedVideoUrl); // Fetch comments for the selected video
+  if (selectedVideoId) {
+    fetchComments();
   } else {
     Swal.fire({
       title: 'Error!',
@@ -204,6 +257,7 @@ const handleViewCommentsButtonClick = () => {
   }
 };
 
+// Function to handle posting comments
 const handlePostCommentButtonClick = async () => {
   const { value: text } = await Swal.fire({
     title: 'Post a comment',
@@ -216,49 +270,19 @@ const handlePostCommentButtonClick = async () => {
     showCancelButton: true
   });
 
-  // Check if the text is not null or empty
   if (text) {
-    try {
-      const videoId = selectedVideoUrl; // Assuming `selectedVideoUrl` holds the ID of the currently selected video.
-      const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`, // Assuming you're using JWT for authentication
-        },
-        body: JSON.stringify({
-          comment: {
-            text: text // Assuming your backend expects the key to be `text` within a `comment` object
-          }
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-
-      // Assuming the backend returns the newly created comment
-      const data = await response.json();
-      setComments([...comments, data.comment]); // Update the local state to display the new comment
-
-      Swal.fire({
-        title: 'Success!',
-        text: 'Your comment has been posted',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    } catch (error) {
-      console.error('Error posting comment:', error);
+    if (selectedVideoId) {
+      postComment(text);
+    } else {
       Swal.fire({
         title: 'Error!',
-        text: 'Failed to post comment',
+        text: 'No video selected',
         icon: 'error',
         confirmButtonText: 'OK'
       });
     }
   }
 };
-
 
 
 
