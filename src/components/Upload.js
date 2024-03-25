@@ -125,20 +125,30 @@ function Upload() {
     xhr.send(formDataToSend);
   };
 
-  const handleVideoSelection = (videoUrl) => {
-    // Extract video ID from the URL
-    const videoId = extractVideoId(videoUrl); // You need to define a function to extract the ID
+  // Modify the handleVideoSelection function to accept only videoId
+const handleVideoSelection = (videoId) => {
+  // Find the selected video from currentUser.videos based on videoId
+  const selectedVideo = currentUser.videos.find(video => video.id === videoId);
+  if (selectedVideo) {
+    // Extract the videoUrl from the selected video
+    setSelectedVideoUrl(`http://127.0.0.1:3000${selectedVideo.video_url}`);
+    // Set the selectedVideoId
     setSelectedVideoId(videoId);
-    setSelectedVideoUrl(`http://127.0.0.1:3000${videoUrl}`);
-  };
-  
-  // Function to extract the video ID from the URL
-  const extractVideoId = (videoUrl) => {
-    // Implement the logic to extract the ID from the URL
-    // For example, if your URL format is '/videos/{videoId}', you can extract the ID like this:
-    const parts = videoUrl.split('/');
-    return parts[parts.length - 1];
-  };
+  } else {
+    // Handle error if selected video is not found
+    console.error('Selected video not found');
+    Swal.fire({
+      title: 'Error!',
+      text: 'Selected video not found',
+      icon: 'error',
+      confirmButtonText: 'OK'
+    });
+  }
+};
+
+// Modify the JSX where handleVideoSelection is called to pass only videoId
+
+
   
 // 
 const fetchQuestions = async (questionType) => {
@@ -180,99 +190,74 @@ const handleCategorySelect = (category) => {
 };
 // commments 
 
-const fetchComments = async () => {
-  try {
-    const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
-      method: 'GET',
-      headers: {
-        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-      },
-    });
+  // Fetch comments using selectedVideoId
+  const fetchComments = async () => {
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
+        method: 'GET',
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+      });
 
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const data = await response.json();
+      setComments(data.comments);
+    } catch (error) {
+      console.error('Error fetching comments:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to fetch comments',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
-    const data = await response.json();
-    setComments(data.comments);
-  } catch (error) {
-    console.error('Error fetching comments:', error);
-    Swal.fire({
-      title: 'Error!',
-      text: 'Failed to fetch comments',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-};
+  };
 
-// Post Comment Function
-const postComment = async (text) => {
-  try {
-    const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-      },
-      body: JSON.stringify({
-        text: text
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
+  // Post comment using selectedVideoId
+  const postComment = async (text) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
+        },
+        body: JSON.stringify({
+          content: text // Change 'comment' to 'content'
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+  
+      const data = await response.json();
+      setComments([...comments, data.comment]);
+  
+      Swal.fire({
+        title: 'Success!',
+        text: 'Your comment has been posted',
+        icon: 'success',
+        confirmButtonText: 'OK'
+      });
+    } catch (error) {
+      console.error('Error posting comment:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Failed to post comment',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
     }
-
-    const data = await response.json();
-    setComments([...comments, data.comment]); // Assuming the backend returns the newly created comment
-
-    Swal.fire({
-      title: 'Success!',
-      text: 'Your comment has been posted',
-      icon: 'success',
-      confirmButtonText: 'OK'
-    });
-  } catch (error) {
-    console.error('Error posting comment:', error);
-    Swal.fire({
-      title: 'Error!',
-      text: 'Failed to post comment',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-};
-
-// Function to handle viewing comments
-const handleViewCommentsButtonClick = () => {
-  if (selectedVideoId) {
-    fetchComments();
-  } else {
-    Swal.fire({
-      title: 'Error!',
-      text: 'No video selected',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-};
-
-// Function to handle posting comments
-const handlePostCommentButtonClick = async () => {
-  const { value: text } = await Swal.fire({
-    title: 'Post a comment',
-    input: 'textarea',
-    inputLabel: 'Your comment',
-    inputPlaceholder: 'Type your comment here...',
-    inputAttributes: {
-      'aria-label': 'Type your comment here'
-    },
-    showCancelButton: true
-  });
-
-  if (text) {
+  };
+  
+  
+  const handleViewCommentsButtonClick = () => {
     if (selectedVideoId) {
-      postComment(text);
+      fetchComments();
     } else {
       Swal.fire({
         title: 'Error!',
@@ -281,9 +266,33 @@ const handlePostCommentButtonClick = async () => {
         confirmButtonText: 'OK'
       });
     }
-  }
-};
+  };
 
+  const handlePostCommentButtonClick = async () => {
+    const { value: text } = await Swal.fire({
+      title: 'Post a comment',
+      input: 'textarea',
+      inputLabel: 'Your comment',
+      inputPlaceholder: 'Type your comment here...',
+      inputAttributes: {
+        'aria-label': 'Type your comment here'
+      },
+      showCancelButton: true
+    });
+
+    if (text) {
+      if (selectedVideoId) {
+        postComment(text);
+      } else {
+        Swal.fire({
+          title: 'Error!',
+          text: 'No video selected',
+          icon: 'error',
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+  };
 
 
   return (
@@ -360,10 +369,11 @@ const handlePostCommentButtonClick = async () => {
         <div className="video-list">
           <h3>{currentUser && currentUser.name ? `${currentUser.name}'s Videos` :'My Videos'}</h3>
           {currentUser && currentUser.videos && currentUser.videos.map(video => (
-            <div className="video-item" key={video.id} onClick={() => handleVideoSelection(video.video_url)}>
+            <div className="video-item" key={video.id} onClick={() => handleVideoSelection(video.id)}>
               <h4>{video.title}</h4>
             </div>
           ))}
+
         </div>
 
         {selectedVideoUrl && (
