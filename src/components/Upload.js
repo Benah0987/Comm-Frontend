@@ -8,6 +8,7 @@ function Upload() {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
   const [comments, setComments] = useState([]);
+
   const [selectedVideoId, setSelectedVideoId] = useState('');
   
   
@@ -126,26 +127,24 @@ function Upload() {
   };
 
   // Modify the handleVideoSelection function to accept only videoId
-const handleVideoSelection = (videoId) => {
-  // Find the selected video from currentUser.videos based on videoId
-  const selectedVideo = currentUser.videos.find(video => video.id === videoId);
-  if (selectedVideo) {
-    // Extract the videoUrl from the selected video
-    setSelectedVideoUrl(`http://127.0.0.1:3000${selectedVideo.video_url}`);
-    // Set the selectedVideoId
-    setSelectedVideoId(videoId);
-  } else {
-    // Handle error if selected video is not found
-    console.error('Selected video not found');
-    Swal.fire({
-      title: 'Error!',
-      text: 'Selected video not found',
-      icon: 'error',
-      confirmButtonText: 'OK'
-    });
-  }
-};
-
+  
+  const handleVideoSelection = (videoId) => {
+    const selectedVideo = currentUser.videos.find(video => video.id === videoId);
+    if (selectedVideo) {
+      setSelectedVideoUrl(`http://127.0.0.1:3000${selectedVideo.video_url}`);
+      setSelectedVideoId(videoId);
+      // Fetch comments for the selected video
+     // Pass the videoId to fetchComments
+    } else {
+      console.error('Selected video not found');
+      Swal.fire({
+        title: 'Error!',
+        text: 'Selected video not found',
+        icon: 'error',
+        confirmButtonText: 'OK'
+      });
+    }
+  };
 // Modify the JSX where handleVideoSelection is called to pass only videoId
 
 
@@ -199,12 +198,13 @@ const handleCategorySelect = (category) => {
           "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
         },
       });
-
+  
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
       setComments(data.comments);
+      console.log("Fetched comments:", data.comments); // Add this line to log fetched comments
     } catch (error) {
       console.error('Error fetching comments:', error);
       Swal.fire({
@@ -215,6 +215,7 @@ const handleCategorySelect = (category) => {
       });
     }
   };
+  
 
   // Post comment using selectedVideoId
   const postComment = async (text) => {
@@ -226,7 +227,7 @@ const handleCategorySelect = (category) => {
           "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify({
-          content: text // Change 'comment' to 'content'
+          content: text
         }),
       });
   
@@ -234,8 +235,11 @@ const handleCategorySelect = (category) => {
         throw new Error('Network response was not ok');
       }
   
+      // Assuming the response contains the newly created comment
       const data = await response.json();
-      setComments([...comments, data.comment]);
+      
+      // Update the comments state with the new comment
+      setComments(prevComments => [...prevComments, data.comment]);
   
       Swal.fire({
         title: 'Success!',
@@ -255,6 +259,7 @@ const handleCategorySelect = (category) => {
   };
   
   
+  
   const handleViewCommentsButtonClick = () => {
     if (selectedVideoId) {
       fetchComments();
@@ -269,7 +274,7 @@ const handleCategorySelect = (category) => {
   };
 
   const handlePostCommentButtonClick = async () => {
-    const { value: text } = await Swal.fire({
+    const { value: content } = await Swal.fire({
       title: 'Post a comment',
       input: 'textarea',
       inputLabel: 'Your comment',
@@ -280,9 +285,9 @@ const handleCategorySelect = (category) => {
       showCancelButton: true
     });
 
-    if (text) {
+    if (content) {
       if (selectedVideoId) {
-        postComment(text);
+        postComment(content);
       } else {
         Swal.fire({
           title: 'Error!',
@@ -439,17 +444,19 @@ const handleCategorySelect = (category) => {
         </button>
       </div>
 
-      {/* Display Comments */}
-      {comments.length > 0 && (
+      
+    {/* Display Comments */}
+    {comments && (
         <div className="comments-section">
           <h4>Comments</h4>
           <ul>
             {comments.map((comment, index) => (
-              <li key={index}>{comment.text}</li>
+              <li key={index}>{comment.content}</li>
             ))}
           </ul>
         </div>
       )}
+
 
 
       </div>
