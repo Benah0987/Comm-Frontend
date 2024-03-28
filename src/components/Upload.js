@@ -39,7 +39,7 @@ function Upload() {
 
       if (response.ok) {
         const data = await response.json();
-        setUserVideos(data.videos); // Assuming the response contains an array of videos
+        setUserVideos(data.videos);
       } else {
         Swal.fire({
           title: 'Error!',
@@ -134,7 +134,7 @@ function Upload() {
       setSelectedVideoUrl(`http://127.0.0.1:3000${selectedVideo.video_url}`);
       setSelectedVideoId(videoId);
       // Fetch comments for the selected video
-     // Pass the videoId to fetchComments
+      fetchComments(videoId);
     } else {
       console.error('Selected video not found');
       Swal.fire({
@@ -189,22 +189,22 @@ const handleCategorySelect = (category) => {
 };
 // commments 
 
-  // Fetch comments using selectedVideoId
-  const fetchComments = async () => {
+  
+   // Fetch comments for a video
+   const fetchComments = async (videoId) => {
     try {
-      const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
+      const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
         method: 'GET',
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
         },
       });
-  
+
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
       const data = await response.json();
       setComments(data.comments);
-      console.log("Fetched comments:", data.comments); // Add this line to log fetched comments
     } catch (error) {
       console.error('Error fetching comments:', error);
       Swal.fire({
@@ -215,6 +215,7 @@ const handleCategorySelect = (category) => {
       });
     }
   };
+  
   
 
   // Post comment using selectedVideoId
@@ -227,7 +228,9 @@ const handleCategorySelect = (category) => {
           "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
         },
         body: JSON.stringify({
-          content: text
+          content: text,
+          user_id: currentUser.id, // Add user_id
+          video_id: selectedVideoId, // Add video_id
         }),
       });
   
@@ -237,9 +240,16 @@ const handleCategorySelect = (category) => {
   
       // Assuming the response contains the newly created comment
       const data = await response.json();
-      
+  
       // Update the comments state with the new comment
-      setComments(prevComments => [...prevComments, data.comment]);
+      setComments(prevComments => {
+        if (!Array.isArray(prevComments)) {
+          // If prevComments is not an array, return it as an array with the new comment
+          return [data.comment];
+        }
+        // Otherwise, append the new comment to the existing array
+        return [...prevComments, data.comment];
+      });
   
       Swal.fire({
         title: 'Success!',
@@ -260,9 +270,11 @@ const handleCategorySelect = (category) => {
   
   
   
-  const handleViewCommentsButtonClick = () => {
+  
+   // Handle viewing comments
+   const handleViewCommentsButtonClick = () => {
     if (selectedVideoId) {
-      fetchComments();
+      fetchComments(selectedVideoId);
     } else {
       Swal.fire({
         title: 'Error!',
@@ -274,7 +286,7 @@ const handleCategorySelect = (category) => {
   };
 
   const handlePostCommentButtonClick = async () => {
-    const { value: content } = await Swal.fire({
+    const { value: text } = await Swal.fire({
       title: 'Post a comment',
       input: 'textarea',
       inputLabel: 'Your comment',
@@ -285,9 +297,9 @@ const handleCategorySelect = (category) => {
       showCancelButton: true
     });
 
-    if (content) {
+    if (text) {
       if (selectedVideoId) {
-        postComment(content);
+        postComment(text);
       } else {
         Swal.fire({
           title: 'Error!',
@@ -446,16 +458,21 @@ const handleCategorySelect = (category) => {
 
       
     {/* Display Comments */}
-    {comments && (
-        <div className="comments-section">
-          <h4>Comments</h4>
-          <ul>
-            {comments.map((comment, index) => (
-              <li key={index}>{comment.content}</li>
-            ))}
-          </ul>
-        </div>
-      )}
+
+     {/* Display Comments */}
+     {comments ? (
+  <div>
+    <h3>Comments</h3>
+    <ul className="comment-list"> {/* Add the className attribute */}
+      {Object.values(comments).map((comment) => (
+        <li key={comment.id}>{comment.content}</li>
+      ))}
+    </ul>
+  </div>
+) : (
+  <div>Loading comments...</div>
+)}
+
 
 
 

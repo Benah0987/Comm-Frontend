@@ -68,6 +68,17 @@
 .fas {
   margin-right: 5px; /* Space between icon and text */
 }
+.comment-list {
+  font-weight: bold; /* Makes the font heavier */
+  background-color: #f0f0f0; /* Light grey background, change as needed */
+  padding: 10px; /* Adds some space around the list */
+  border-radius: 5px; /* Optional: Adds rounded corners for a modern look */
+}
+
+.comment-list li {
+  margin-bottom: 10px; /* Adds space between comments */
+}
+
 
 /* Responsive adjustments if necessary */
 @media (max-width: 768px) {
