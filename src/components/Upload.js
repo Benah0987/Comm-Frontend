@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import { AuthContext } from './AuthContext'; // Import AuthProvider
+import Comments from './Comments';
 import './upload.css'
 
 function Upload() {
   const { currentUser } = useContext(AuthContext);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [selectedVideoUrl, setSelectedVideoUrl] = useState('');
-  const [comments, setComments] = useState([]);
+
 
   const [selectedVideoId, setSelectedVideoId] = useState('');
   
@@ -134,7 +135,6 @@ function Upload() {
       setSelectedVideoUrl(`http://127.0.0.1:3000${selectedVideo.video_url}`);
       setSelectedVideoId(videoId);
       // Fetch comments for the selected video
-      fetchComments(videoId);
     } else {
       console.error('Selected video not found');
       Swal.fire({
@@ -190,126 +190,8 @@ const handleCategorySelect = (category) => {
 // commments 
 
   
-   // Fetch comments for a video
-   const fetchComments = async (videoId) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:3000/videos/${videoId}/comments`, {
-        method: 'GET',
-        headers: {
-          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json();
-      setComments(data.comments);
-    } catch (error) {
-      console.error('Error fetching comments:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to fetch comments',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  };
-  
   
 
-  // Post comment using selectedVideoId
-  const postComment = async (text) => {
-    try {
-      const response = await fetch(`http://127.0.0.1:3000/videos/${selectedVideoId}/comments`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${localStorage.getItem("jwtToken")}`,
-        },
-        body: JSON.stringify({
-          content: text,
-          user_id: currentUser.id, // Add user_id
-          video_id: selectedVideoId, // Add video_id
-        }),
-      });
-  
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-  
-      // Assuming the response contains the newly created comment
-      const data = await response.json();
-  
-      // Update the comments state with the new comment
-      setComments(prevComments => {
-        if (!Array.isArray(prevComments)) {
-          // If prevComments is not an array, return it as an array with the new comment
-          return [data.comment];
-        }
-        // Otherwise, append the new comment to the existing array
-        return [...prevComments, data.comment];
-      });
-  
-      Swal.fire({
-        title: 'Success!',
-        text: 'Your comment has been posted',
-        icon: 'success',
-        confirmButtonText: 'OK'
-      });
-    } catch (error) {
-      console.error('Error posting comment:', error);
-      Swal.fire({
-        title: 'Error!',
-        text: 'Failed to post comment',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  };
-  
-  
-  
-  
-   // Handle viewing comments
-   const handleViewCommentsButtonClick = () => {
-    if (selectedVideoId) {
-      fetchComments(selectedVideoId);
-    } else {
-      Swal.fire({
-        title: 'Error!',
-        text: 'No video selected',
-        icon: 'error',
-        confirmButtonText: 'OK'
-      });
-    }
-  };
-
-  const handlePostCommentButtonClick = async () => {
-    const { value: text } = await Swal.fire({
-      title: 'Post a comment',
-      input: 'textarea',
-      inputLabel: 'Your comment',
-      inputPlaceholder: 'Type your comment here...',
-      inputAttributes: {
-        'aria-label': 'Type your comment here'
-      },
-      showCancelButton: true
-    });
-
-    if (text) {
-      if (selectedVideoId) {
-        postComment(text);
-      } else {
-        Swal.fire({
-          title: 'Error!',
-          text: 'No video selected',
-          icon: 'error',
-          confirmButtonText: 'OK'
-        });
-      }
-    }
-  };
 
 
   return (
@@ -399,8 +281,11 @@ const handleCategorySelect = (category) => {
               <source src={selectedVideoUrl} type="video/mp4" />
               Your browser does not support the video tag.
             </video>
+            {/* Render Comments Component Here */}
+            <Comments videoId={selectedVideoId} />
           </div>
         )}
+
       </div>
       
         {/* Category Selection Buttons */}
@@ -411,10 +296,15 @@ const handleCategorySelect = (category) => {
         <button onClick={() => handleQuestionTypeChange('video')} className={`btn ${selectedQuestionType === 'video' ? 'btn-active' : 'btn-inactive'}`}>
           <i className="fas fa-video"></i> Video Questions
         </button>
+        <div>
+        <i>click any of the Category to view the questions</i>
+        </div>
+        
       </div>
 
       {/* Category Selection Buttons */}
       <div className="category-selection-buttons">
+        
         {selectedQuestionType && Object.entries(questions.reduce((acc, question) => {
           if (!acc[question.category]) {
             acc[question.category] = [];
@@ -442,37 +332,9 @@ const handleCategorySelect = (category) => {
         </div>
       )}
 
-      {/* Button to view comments */}
-      <div className="comment-button-container">
-        <button onClick={handleViewCommentsButtonClick} className="btn btn-primary">
-          View Comments
-        </button>
-      </div>
-
-      {/* Button to post a comment */}
-      <div className="comment-button-container">
-        <button onClick={handlePostCommentButtonClick} className="btn btn-primary">
-          Post Comment
-        </button>
-      </div>
-
-      
-    {/* Display Comments */}
-
-     {/* Display Comments */}
-     {comments ? (
-  <div>
-    <h3>Comments</h3>
-    <ul className="comment-list"> {/* Add the className attribute */}
-      {Object.values(comments).map((comment) => (
-        <li key={comment.id}>{comment.content}</li>
-      ))}
-    </ul>
-  </div>
-) : (
-  <div>Loading comments...</div>
-)}
-
+    
+     
+    
 
 
 
