@@ -33,7 +33,7 @@ function Homepage() {
                 <ul>
                   <li>Impacted my professional development</li>
                   <li>Hindered my ability to form meaningful relationships</li>
-                  <li>Caused missed opportunities for romantic connections</li>
+                  <li>Caused missed opportunities for romantic connections(kufumble)</li>
                   <li>Not understanding how important negotiating skills are important in life</li>
                 </ul>
                 <p>But amidst these challenges, I've found guidance and inspiration in the transformative teachings of Vinh Giang, a keynote speaker whose insights have reshaped the way we perceive effective communication.</p>
@@ -44,7 +44,7 @@ function Homepage() {
 
 
               <div className="btn-container">
-                  <Link to="/upload" className="btn">Signup Now</Link>
+                  <Link to="/signup" className="btn">Signup Now</Link>
                 </div>
 
 

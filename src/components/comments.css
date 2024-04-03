@@ -1,0 +1,23 @@
+.custom-button {
+    padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  font-size: 16px;
+  color: white;
+  margin-left: 5px ;
+  margin-bottom: 4px;
+  background-color: #007bff; /* Default background color */
+  transition: background-color 0.3s;
+}
+
+.custom-button:hover {
+  background-color: #FFA500; /* Change background color on hover */
+}
+.comments-container {
+    max-height: 200px; /* Adjust as needed */
+    overflow-y: auto;
+  }
+  
+   
+  

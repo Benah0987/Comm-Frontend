@@ -13,7 +13,7 @@
   max-width: calc(150% - 400px); /* Adjust the width of the video */
   height: 100%; /* Ensure the video fills the container vertically */
   object-fit: cover; /* Ensure the video fills its container */
-  margin-top: 8px;
+  margin-top: 12px;
   margin-bottom :12px;
 }
 
