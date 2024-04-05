@@ -260,9 +260,32 @@ const handleCategorySelect = (category) => {
         </div>
         
       </section>
-      
+
+      {/* storytelling structure */}
+      <div className="center-container">
+  <section className="storytelling-explanation">
+    <h2>Storytelling Technique Structure</h2>
+    <p>
+      In your storytelling technique, you follow a structured approach that consists of several key elements:
+    </p>
+    <ul>
+      <li>Hook</li>
+      <li>Get into the heart of the story</li>
+      <li>Cutting the fat</li>
+      <li>Weaving through the thread</li>
+      <li>Landing the plane</li>
+    </ul>
+    <p>
+      Each of these elements plays a crucial role in crafting a compelling story that captivates the audience.
+      The audio and video quizzes provided here are designed to help you assess how well you've incorporated
+      these storytelling elements into your narratives.
+    </p>
+  </section>
+</div>
+
 
       {/* Display user's videos */}
+
       
       <div className="video-preview-container mt-5">
         <div className="video-list">
@@ -295,6 +318,10 @@ const handleCategorySelect = (category) => {
         </button>
         <button onClick={() => handleQuestionTypeChange('video')} className={`btn ${selectedQuestionType === 'video' ? 'btn-active' : 'btn-inactive'}`}>
           <i className="fas fa-video"></i> Video Questions
+        </button>
+
+        <button onClick={() => handleQuestionTypeChange('interview quiz')} className={`btn ${selectedQuestionType === 'interview quiz' ? 'btn-active' : 'btn-inactive'}`}>
+          <i className="fas fa-question-circle"></i> Interview Quiz
         </button>
         <div>
         <i>click any of the Category to view the questions</i>
