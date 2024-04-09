@@ -22,6 +22,11 @@ function Upload() {
   const [questions, setQuestions] = useState([]);
   const [selectedQuestionType, setSelectedQuestionType] = useState(null);
   
+  const [activeTab, setActiveTab] = useState('hook');
+
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+  };
   
 
   useEffect(() => {
@@ -93,7 +98,7 @@ function Upload() {
 
     xhr.onload = function() {
       setIsUploading(false); // Stop uploading
-      if (xhr.status === 200) {
+      if (xhr.status === 200 || xhr.status === 201) { // Adjusted condition
         Swal.fire({
           title: 'Success!',
           text: 'Video uploaded successfully',
@@ -111,6 +116,7 @@ function Upload() {
       }
       setUploadProgress(0); // Reset progress
     };
+    
 
     xhr.onerror = function() {
       setIsUploading(false); // Stop uploading
@@ -261,27 +267,27 @@ const handleCategorySelect = (category) => {
         
       </section>
 
-      {/* storytelling structure */}
-      <div className="center-container">
-  <section className="storytelling-explanation">
-    <h2>Storytelling Technique Structure</h2>
-    <p>
-      In your storytelling technique, you follow a structured approach that consists of several key elements:
-    </p>
-    <ul>
-      <li>Hook</li>
-      <li>Get into the heart of the story</li>
-      <li>Cutting the fat</li>
-      <li>Weaving through the thread</li>
-      <li>Landing the plane</li>
-    </ul>
-    <p>
-      Each of these elements plays a crucial role in crafting a compelling story that captivates the audience.
-      The audio and video quizzes provided here are designed to help you assess how well you've incorporated
-      these storytelling elements into your narratives.
-    </p>
-  </section>
-</div>
+      <div class="p-5 bg-white rounded shadow mb-5">
+        <ul id="myTab" role="tablist" class="nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-0 rounded-nav">
+            <li class="nav-item flex-sm-fill">
+                <a id="hook-tab" onClick={() => handleTabChange('hook')} data-toggle="tab" href="#hook" role="tab" aria-controls="hook" aria-selected={activeTab === 'hook' ? 'true' : 'false'} class={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'hook' ? 'active' : ''}`}>Hook</a>
+            </li>
+            <li class="nav-item flex-sm-fill">
+                <a id="heart-tab" onClick={() => handleTabChange('heart')} data-toggle="tab" href="#heart" role="tab" aria-controls="heart" aria-selected={activeTab === 'heart' ? 'true' : 'false'} class={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'heart' ? 'active' : ''}`}>Heart of the Story</a>
+            </li>
+            {/* Add more tabs as needed */}
+        </ul>
+        <div id="myTabContent" class="tab-content">
+            <div id="hook" role="tabpanel" aria-labelledby="hook-tab" class={`tab-pane fade px-4 py-5 ${activeTab === 'hook' ? 'show active' : ''}`}>
+                <p class="text-muted">The Hook: Start your story with an engaging hook that grabs the audience's attention and makes them want to hear more.</p>
+            </div>
+            <div id="heart" role="tabpanel" aria-labelledby="heart-tab" class={`tab-pane fade px-4 py-5 ${activeTab === 'heart' ? 'show active' : ''}`}>
+                <p class="text-muted">Getting into the Heart of the Story: Dive deep into the core of your story, sharing the essential experiences, emotions, and truths that you want to convey.</p>
+            </div>
+            {/* Add more tab content as needed */}
+        </div>
+      </div>
+
 
 
       {/* Display user's videos */}
