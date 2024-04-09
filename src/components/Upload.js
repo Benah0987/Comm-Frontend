@@ -267,26 +267,103 @@ const handleCategorySelect = (category) => {
         
       </section>
 
-      <div class="p-5 bg-white rounded shadow mb-5">
-        <ul id="myTab" role="tablist" class="nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-0 rounded-nav">
-            <li class="nav-item flex-sm-fill">
-                <a id="hook-tab" onClick={() => handleTabChange('hook')} data-toggle="tab" href="#hook" role="tab" aria-controls="hook" aria-selected={activeTab === 'hook' ? 'true' : 'false'} class={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'hook' ? 'active' : ''}`}>Hook</a>
-            </li>
-            <li class="nav-item flex-sm-fill">
-                <a id="heart-tab" onClick={() => handleTabChange('heart')} data-toggle="tab" href="#heart" role="tab" aria-controls="heart" aria-selected={activeTab === 'heart' ? 'true' : 'false'} class={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'heart' ? 'active' : ''}`}>Heart of the Story</a>
-            </li>
-            {/* Add more tabs as needed */}
-        </ul>
-        <div id="myTabContent" class="tab-content">
-            <div id="hook" role="tabpanel" aria-labelledby="hook-tab" class={`tab-pane fade px-4 py-5 ${activeTab === 'hook' ? 'show active' : ''}`}>
-                <p class="text-muted">The Hook: Start your story with an engaging hook that grabs the audience's attention and makes them want to hear more.</p>
-            </div>
-            <div id="heart" role="tabpanel" aria-labelledby="heart-tab" class={`tab-pane fade px-4 py-5 ${activeTab === 'heart' ? 'show active' : ''}`}>
-                <p class="text-muted">Getting into the Heart of the Story: Dive deep into the core of your story, sharing the essential experiences, emotions, and truths that you want to convey.</p>
-            </div>
-            {/* Add more tab content as needed */}
-        </div>
+      <div className="p-5 bg-white rounded shadow mb-5">
+          {/* Rounded tabs */}
+          <h2 style={{ textAlign: 'center', marginBottom: '5px' }}>The StoryTelling Structure</h2>
+          <ul id="myTab" role="tablist" className="nav nav-tabs nav-pills flex-column flex-sm-row text-center bg-light border-0 rounded-nav">
+              <li className="nav-item flex-sm-fill">
+                  <a
+                    id="hook-tab"
+                    onClick={() => handleTabChange('hook')}
+                    data-toggle="tab"
+                    href="#hook"
+                    role="tab"
+                    aria-controls="hook"
+                    aria-selected={activeTab === 'hook' ? 'true' : 'false'}
+                    className={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'hook' ? 'active' : ''}`}
+                  >
+                    1. Hook
+                  </a>
+              </li>
+              <li className="nav-item flex-sm-fill">
+                  <a
+                    id="heart-tab"
+                    onClick={() => handleTabChange('heart')}
+                    data-toggle="tab"
+                    href="#heart"
+                    role="tab"
+                    aria-controls="heart"
+                    aria-selected={activeTab === 'heart' ? 'true' : 'false'}
+                    className={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'heart' ? 'active' : ''}`}
+                  >
+                   2. Heart of the Story
+                  </a>
+              </li>
+              <li className="nav-item flex-sm-fill">
+                  <a
+                    id="cutting-tab"
+                    onClick={() => handleTabChange('cutting')}
+                    data-toggle="tab"
+                    href="#cutting"
+                    role="tab"
+                    aria-controls="cutting"
+                    aria-selected={activeTab === 'cutting' ? 'true' : 'false'}
+                    className={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'cutting' ? 'active' : ''}`}
+                  >
+                    3. Cutting the Fat
+                  </a>
+              </li>
+              <li className="nav-item flex-sm-fill">
+                  <a
+                    id="weaving-tab"
+                    onClick={() => handleTabChange('weaving')}
+                    data-toggle="tab"
+                    href="#weaving"
+                    role="tab"
+                    aria-controls="weaving"
+                    aria-selected={activeTab === 'weaving' ? 'true' : 'false'}
+                    className={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'weaving' ? 'active' : ''}`}
+                  >
+                   4. Weaving the Thread
+                  </a>
+              </li>
+              <li className="nav-item flex-sm-fill">
+                  <a
+                    id="landing-tab"
+                    onClick={() => handleTabChange('landing')}
+                    data-toggle="tab"
+                    href="#landing"
+                    role="tab"
+                    aria-controls="landing"
+                    aria-selected={activeTab === 'landing' ? 'true' : 'false'}
+                    className={`nav-link border-0 text-uppercase font-weight-bold ${activeTab === 'landing' ? 'active' : ''}`}
+                  >
+                   5. Landing the Plane
+                  </a>
+              </li>
+          </ul>
+      <div id="myTabContent" className="tab-content">
+          <div id="hook" role="tabpanel" aria-labelledby="hook-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'hook' ? 'show active' : ''}`}>
+              <p className="text-muted" style={{ fontSize: '18px' }}>The Hook: Start your story with an engaging hook that grabs the audience's attention and makes them want to hear more.</p>
+          </div>
+          <div id="heart" role="tabpanel" aria-labelledby="heart-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'heart' ? 'show active' : ''}`}>
+              <p className="text-muted" style={{ fontSize: '18px' }}>Getting into the Heart of the Story: Dive deep into the core of your story, sharing the essential experiences, emotions, and truths that you want to convey.</p>
+          </div>
+          <div id="cutting" role="tabpanel" aria-labelledby="cutting-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'cutting' ? 'show active' : ''}`}>
+              <p className="text-muted" style={{ fontSize: '18px' }}>Cutting the Fat: Remove any elements that don't serve the story or distract from the main message, keeping the narrative focused and impactful.</p>
+          </div>
+          <div id="weaving" role="tabpanel" aria-labelledby="weaving-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'weaving' ? 'show active' : ''}`}>
+              <p className="text-muted" style={{ fontSize: '18px' }}>Weaving Through the Thread: Ensure your story has a clear thread that ties the beginning, middle, and end together, making the narrative cohesive and compelling.</p>
+          </div>
+          <div id="landing" role="tabpanel" aria-labelledby="landing-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'landing' ? 'show active' : ''}`}>
+              <p className="text-muted" style={{ fontSize: '18px' }}>Landing the Plane: Conclude your story in a way that leaves a lasting impression, ensuring the audience takes away the key message or lesson.</p>
+          </div>
+        
+
+          </div>
+          {/* End rounded tabs */}
       </div>
+
 
 
 
