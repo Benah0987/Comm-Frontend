@@ -202,8 +202,8 @@ const handleCategorySelect = (category) => {
 
   return (
     <div>
-      <section className="vh-100" style={{ backgroundColor: '#2779e2' }}>
-        <div className="container h-100">
+      <section className="vh-80" style={{ backgroundColor: '#2779e2' }}>
+        <div className="container h-80">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-xl-9">
               <h1 className="text-white mb-4">Upload Video</h1>
@@ -344,19 +344,19 @@ const handleCategorySelect = (category) => {
           </ul>
       <div id="myTabContent" className="tab-content">
           <div id="hook" role="tabpanel" aria-labelledby="hook-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'hook' ? 'show active' : ''}`}>
-              <p className="text-muted" style={{ fontSize: '18px' }}>The Hook: Start your story with an engaging hook that grabs the audience's attention and makes them want to hear more.</p>
+              <p className="text-muted" style={{ fontSize: '15px' }}>The Hook: Start your story with an engaging hook that grabs the audience's attention and makes them want to hear more.</p>
           </div>
           <div id="heart" role="tabpanel" aria-labelledby="heart-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'heart' ? 'show active' : ''}`}>
-              <p className="text-muted" style={{ fontSize: '18px' }}>Getting into the Heart of the Story: Dive deep into the core of your story, sharing the essential experiences, emotions, and truths that you want to convey.</p>
+              <p className="text-muted" style={{ fontSize: '15px' }}>Getting into the Heart of the Story: Dive deep into the core of your story, sharing the essential experiences, emotions, and truths that you want to convey.</p>
           </div>
           <div id="cutting" role="tabpanel" aria-labelledby="cutting-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'cutting' ? 'show active' : ''}`}>
-              <p className="text-muted" style={{ fontSize: '18px' }}>Cutting the Fat: Remove any elements that don't serve the story or distract from the main message, keeping the narrative focused and impactful.</p>
+              <p className="text-muted" style={{ fontSize: '15px' }}>Cutting the Fat: Remove any elements that don't serve the story or distract from the main message, keeping the narrative focused and impactful.</p>
           </div>
           <div id="weaving" role="tabpanel" aria-labelledby="weaving-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'weaving' ? 'show active' : ''}`}>
-              <p className="text-muted" style={{ fontSize: '18px' }}>Weaving Through the Thread: Ensure your story has a clear thread that ties the beginning, middle, and end together, making the narrative cohesive and compelling.</p>
+              <p className="text-muted" style={{ fontSize: '15px' }}>Weaving Through the Thread: Ensure your story has a clear thread that ties the beginning, middle, and end together, making the narrative cohesive and compelling.</p>
           </div>
           <div id="landing" role="tabpanel" aria-labelledby="landing-tab" className={`tab-pane fade px-4 py-5 ${activeTab === 'landing' ? 'show active' : ''}`}>
-              <p className="text-muted" style={{ fontSize: '18px' }}>Landing the Plane: Conclude your story in a way that leaves a lasting impression, ensuring the audience takes away the key message or lesson.</p>
+              <p className="text-muted" style={{ fontSize: '15px' }}>Landing the Plane: Conclude your story in a way that leaves a lasting impression, ensuring the audience takes away the key message or lesson.</p>
           </div>
         
 
@@ -372,7 +372,9 @@ const handleCategorySelect = (category) => {
       
       <div className="video-preview-container mt-5">
         <div className="video-list">
+        <p>click on any to watch video</p>
           <h3>{currentUser && currentUser.name ? `${currentUser.name}'s Videos` :'My Videos'}</h3>
+          
           {currentUser && currentUser.videos && currentUser.videos.map(video => (
             <div className="video-item" key={video.id} onClick={() => handleVideoSelection(video.id)}>
               <h4>{video.title}</h4>
