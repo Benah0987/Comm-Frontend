@@ -25,6 +25,7 @@
   }
   
   .video-player {
+    height: 44%;
     width: 80%; /* Adjust the width as needed */
     max-width: 800px; /* Limit maximum width to prevent it from being too large */
     border: 1px solid #ccc; /* Add border */
