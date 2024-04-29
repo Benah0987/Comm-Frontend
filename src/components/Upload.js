@@ -252,6 +252,7 @@ const handleCategorySelect = (category) => {
                         >
                           {Math.round(uploadProgress)}%
                         </div>
+                        <div className="spinner-border ml-auto" role="status" aria-hidden="true"></div>
                       </div>
                     )}
                     <button type="submit" className="btn btn-primary btn-lg">

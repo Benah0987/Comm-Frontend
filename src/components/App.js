@@ -7,6 +7,7 @@ import Footer from './Footer';
 import Login from './Login';
 import Upload from './Upload';
 import Signup from './Signup';
+import Faq from './Faq';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
             <Route path="/upload" element={<Upload />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/faq" element={<Faq/>} />
+
           </Routes>
           <Footer />
         </AuthProvider>

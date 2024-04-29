@@ -28,26 +28,17 @@ function Homepage() {
           <section className="text-section my-5">
             <div className="container">
               <div className="row">
-              <div className="col-md-10 mx-auto" style={{ fontSize: '18px' }}>
-                <p>Have you ever felt the frustration of struggling to effectively communicate your ideas? Like you, I've experienced firsthand the challenges that arise from poor communication.</p>
-                <ul>
-                  <li>Impacted my professional development</li>
-                  <li>Hindered my ability to form meaningful relationships</li>
-                  <li>Caused missed opportunities for romantic connections(kufumble)</li>
-                  <li>Not understanding how important negotiating skills are important in life</li>
-                </ul>
-                <p>But amidst these challenges, I've found guidance and inspiration in the transformative teachings of Vinh Giang, a keynote speaker whose insights have reshaped the way we perceive effective communication.</p>
-
-                <p>Sign up now and unleash your creativity! Upload exciting videos and let us assist you in unlocking your full potential. Get ready to embark on a journey of self-expression and success!</p>
-
-              </div>
-
-
-              <div className="btn-container">
+                <div className="col-md-10 mx-auto" style={{ fontSize: '18px' }}>
+                  <p>Unlock your full potential in communication with Comm! Are you ready to become a more confident and effective communicator?</p>
+                  <p>Whether you're a professional looking to enhance your presentation skills, a language learner striving for fluency, or an educator seeking to engage students with dynamic content, Comm is here to help you succeed.</p>
+                  <p>Watch our introductory video on the right to see how Comm can transform your communication skills. Don’t just take our word for it — see it in action!</p>
+                </div>
+                <div className="btn-container">
                   <Link to="/signup" className="btn">Signup Now</Link>
                 </div>
-
-
+                <div className="arrow-container">
+                  <i className="fas fa-arrow-right" aria-label="Watch Video"></i>
+                </div>
               </div>
             </div>
           </section>
@@ -59,10 +50,10 @@ function Homepage() {
               Your browser does not support the video tag.
             </video>
             <div className="controls">
-              <button onClick={handlePlayPause}>
+              <button onClick={handlePlayPause} className="play-pause-btn">
                 <i className="fas fa-play" aria-label="Play/Pause"></i>
               </button>
-              <button onClick={handleMute}>
+              <button onClick={handleMute} className="mute-btn">
                 <i className="fas fa-volume-up" aria-label="Mute/Unmute"></i>
               </button>
             </div>
@@ -70,15 +61,12 @@ function Homepage() {
         </div>
       </div>
       
-      {/* Tabs */}
+      {/* Tabs Section */}
       <section id="tabs">
         <div className="container" style={{ backgroundColor: '#3f51b5' }}>
-          <h6 className="section-title h1 text-black"> Master communication</h6>
-          
+          <h6 className="section-title h1 text-black">Master Communication</h6>
           <p className="text-center italicized-text larger-font text-white">
-            In communication, a speaker's word only count for a small percentage of his or her effort. The pitch and tone of the voice, the speed and rhythm of the spoken words, and the pauses between those words may tell more than what is being communicated.
-            <br/>
-            "Communication: 7% words, 38% tone, 55% body language. From 'Never Split the Difference', maximize impact, minimize words."
+            Communication is key in every aspect of life. Whether you're delivering a presentation, engaging in conversation, or teaching others, effective communication skills are essential for success.
           </p>
 
           <Tab.Container activeKey={activeTab} onSelect={key => setActiveTab(key)}>
@@ -96,29 +84,24 @@ function Homepage() {
                 <Nav.Link eventKey="tonality">Tonality</Nav.Link>
               </Nav.Item>
             </Nav>
-            <Tab.Content className="py-3 px-3 px-sm-0 b" style={{ backgroundColor: '#3f51b5' }}>
+            <Tab.Content className="py-3 px-3 px-sm-0" style={{ backgroundColor: '#3f51b5' }}>
               <Tab.Pane eventKey="storytelling">
-                <p>Storytelling is a powerful tool for capturing attention, conveying complex ideas, and engaging audiences emotionally. A well-crafted narrative can make information more memorable and impactful.</p>
+                <p>Storytelling is a powerful tool for capturing attention and engaging audiences emotionally. A well-crafted narrative can make information more memorable and impactful.</p>
               </Tab.Pane>
               <Tab.Pane eventKey="emotional-intelligence">
-                <p>Emotional intelligence involves understanding and managing one's own emotions and recognizing and empathizing with the emotions of others. It is crucial for effective communication, building relationships, and navigating social situations.</p>
+                <p>Emotional intelligence involves understanding and managing one's emotions. It is crucial for effective communication and building relationships.</p>
               </Tab.Pane>
               <Tab.Pane eventKey="body-language">
-                <p>Body language, including gestures, facial expressions, and posture, can communicate a wealth of information without saying a word. Being aware of and using body language effectively can enhance communication and convey confidence and credibility.</p>
+                <p>Body language can communicate a wealth of information. Using it effectively can enhance communication and convey confidence.</p>
               </Tab.Pane>
               <Tab.Pane eventKey="tonality">
-                <p>Tonality refers to the pitch, pace, volume, and rhythm of speech. It can convey emotions, emphasize key points, and maintain listener engagement. Mastering tonality can make spoken communication more dynamic and persuasive.</p>
+                <p>Tonality can convey emotions, emphasize key points, and maintain listener engagement. Mastering tonality can make spoken communication more persuasive.</p>
               </Tab.Pane>
             </Tab.Content>
           </Tab.Container>
         </div>
       </section>
-      {/* ./Tabs */}
-
-      {/* Blockquote Section */}
-     
-
-      {/* End of Blockquote Section */}
+      {/* End of Tabs Section */}
     </div>
   );
 }

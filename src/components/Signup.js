@@ -1,4 +1,3 @@
-
 import React, { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { AuthContext } from './AuthContext'; // Assuming correct path
@@ -7,10 +6,10 @@ import './login.css';
 function Signup() {
   const { signup } = useContext(AuthContext);
   
-
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -18,8 +17,7 @@ function Signup() {
       await signup(username, email, password);
        // Redirect after successful signup
     } catch (error) {
-      console.error('Failed to sign up:', error);
-      // Handle error state (e.g., display an error message)
+      setError('Failed to sign up. Please check your credentials and try again.');
     }
   };
 
@@ -35,8 +33,9 @@ function Signup() {
               <div className="container">
                 <div className="row">
                   <div className="col-lg-10 col-xl-7 mx-auto">
-                    <h3 className="display-4">Signup Now!</h3>
-                    <p className="text-muted mb-4">Create a new account.</p>
+                    <h3 className="display-4">Join Comm Today!</h3>
+                    <p className="text-muted mb-4">Unlock your full communication potential.</p>
+                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
                     <form onSubmit={handleSignup}>
                       <div className="form-group mb-3">
                         <input id="inputUsername" type="text" placeholder="Username" required className="form-control rounded-pill border-0 shadow-sm px-4" value={username} onChange={(e) => setUsername(e.target.value)} />
@@ -49,10 +48,7 @@ function Signup() {
                       </div>
                       <button type="submit" className="btn btn-primary btn-block text-uppercase mb-2 rounded-pill shadow-sm">Sign up</button>
                       <div className="text-center d-flex justify-content-between mt-4">
-                        <p>website by <a href="https://portfolio-five-blush-84.vercel.app/" className="font-italic text-muted">
-                          <u>Benayah</u></a></p>
-                        {/* Updated message with Link component for navigation to /login */}
-                        <p className="font-italic text-muted">Already have an account? <Link to="/login">Login</Link></p>
+                        <p className="font-italic text-muted">Already have an account? <Link to="/login">Login here</Link></p>
                       </div>
                     </form>
                   </div>

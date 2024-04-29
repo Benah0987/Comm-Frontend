@@ -29,6 +29,11 @@ function Navbar() {
                   <i className="fas fa-home"></i> Home
                 </Link>
               </li>
+              <li className="nav-item">
+                <Link to="/faq" className="nav-link">
+                  <i className="fas fa-info-circle"></i> FAQ
+                </Link>
+              </li>
               <li className="nav-item dropdown" onClick={toggleDropdown}>
                 <div className="nav-link dropdown-toggle" style={{cursor: 'pointer'}}>
                   <i className="fas fa-user"></i> Account
