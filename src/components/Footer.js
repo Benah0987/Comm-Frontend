@@ -19,7 +19,7 @@ function Footer() {
             <h6 className="font-weight-bold social-icon-hover">Audience Engagement</h6>
           </div>
           <div className="col-md-2">
-            <h6 className="font-weight-bold social-icon-hover">Genuine Connections</h6>
+            <h6 className="font-weight-bold social-icon-hover">Connections</h6>
           </div>
         </div>
         <hr className="my-4" />
@@ -61,7 +61,7 @@ function Footer() {
       </div>
       <div className="text-center mt-4" style={{ backgroundColor: 'orange', color: 'white' }}>
           <p>
-            &copy; {new Date().getFullYear()} Comm. All rights reserved. Wanyoike Benayah
+            &copy; {new Date().getFullYear()} Comm. All rights reserved. BeIT
           </p>
         </div>
     </footer>

@@ -38,7 +38,7 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const handleAuthSuccess = (data, message) => {
+  const handleAuthSuccess = (data, message, redirectPath) => {
     localStorage.setItem("jwtToken", data.token);
     setIsLoggedIn(true);
     fetchCurrentUserDetails().then(() => {
@@ -46,59 +46,62 @@ export function AuthProvider({ children }) {
         icon: "success",
         title: "Success",
         text: `${message}, ${currentUser?.username || ''}!`,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          nav(redirectPath); // navigate after confirmation
+        }
       });
     });
   };
+  
+ const signup = async (username, email, password) => {
+  try {
+    const response = await fetch("http://127.0.0.1:3000/users", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, email, password }),
+    });
 
-  const signup = async (username, email, password) => {
-    try {
-      const response = await fetch("http://127.0.0.1:3000/users", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      if (!response.ok) {
-        throw new Error("Signup failed");
-      }
-
-      const data = await response.json();
-      handleAuthSuccess(data, "You have successfully signed up");
-      nav("/login"); // Adjust as needed
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Signup Failed",
-        text: error.message,
-      });
-      console.error("Signup error:", error.message);
+    if (!response.ok) {
+      throw new Error("Signup failed");
     }
-  };
 
-  const login = async (email, password) => {
-    try {
-      const response = await fetch("http://127.0.0.1:3000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+    const data = await response.json();
+    handleAuthSuccess(data, "You have successfully signed up", "/login");
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Signup Failed",
+      text: error.message,
+    });
+    console.error("Signup error:", error.message);
+  }
+};
 
-      if (!response.ok) {
-        throw new Error("Invalid credentials");
-      }
+const login = async (email, password) => {
+  try {
+    const response = await fetch("http://127.0.0.1:3000/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, password }),
+    });
 
-      const data = await response.json();
-      handleAuthSuccess(data, "You have successfully logged in");
-      nav("/upload"); // Adjust as needed
-    } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: error.message,
-      });
-      console.error("Login error:", error.message);
+    if (!response.ok) {
+      throw new Error("Invalid credentials");
     }
-  };
+
+    const data = await response.json();
+    handleAuthSuccess(data, "You have successfully logged in", "/upload");
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "Login Failed",
+      text: error.message,
+    });
+    console.error("Login error:", error.message);
+  }
+};
+  
 
   const logout = () => {
     localStorage.removeItem("jwtToken");
