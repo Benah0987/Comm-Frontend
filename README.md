@@ -1,70 +1,85 @@
-# Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Comm - Video Review and Analysis Web App
+Intro:
+Comm is a comprehensive web application designed for video management, review, and analysis. Users can upload videos, receive feedback, and gain valuable insights from their content, all within a seamless and user-friendly interface.
 
-## Available Scripts
+Tech Stack:
 
-In the project directory, you can run:
+Backend: Ruby
+Frontend: React.js, HTML, CSS, JavaScript, Jquery
+Database: PostgreSQL
+Authentication: JSON Web Tokens (JWT)
+Deployment: Render, Netlify
 
-### `npm start`
+Features:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Video Upload: Easily upload videos in various formats.
+Review and Feedback: Receive comments and feedback from collaborators.
+Video Analysis: Gain insights through analytics and data visualization tools.
+User Management: Register, authenticate, and manage user accounts securely.
+Search and Filter: Quickly find videos using advanced search and filtering options.
+Notifications: Stay updated with notifications for new comments and interactions.
+Security: Ensure data security with encryption and secure authentication protocols.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Process:
 
-### `npm run build`
+The inception of Comm began shortly after an enlightening interview experience where I recognized the need to enhance my communication skills. This realization led me to research communication improvement techniques, during which I discovered Vinh Giang, a renowned speaker and communication coach. Inspired by Giang's methods and teachings, I decided to build a platform that not only served as a personal tool for improving communication but also assisted others with similar goals. The development journey involved designing the architecture and user experience to be as interactive and insightful as possible. The main challenges I encountered were integrating real-time video feedback mechanisms and ensuring user-friendly navigation. However, overcoming these hurdles significantly improved my problem-solving and development skills, ultimately leading to the creation of a versatile video review and analysis web application.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Learnings:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+JWT Authentication: Mastered the use of JWT for managing user sessions, a challenge I had faced in previous projects. This involved securely generating and validating tokens to handle user authentication and session management.
+File Uploads: Developed skills in handling file uploads from user devices, addressing challenges such as file size limitations and format support, enhancing the robustness of backend media processing.
+Error Handling: Improved error handling and user feedback mechanisms, learning to provide clear, immediate responses to user actions, especially in scenarios involving file uploads and authentication errors
+Frontend-Backend Integration: Deepened understanding of integrating frontend and backend functionalities seamlessly, ensuring smooth communication between the two layers and enhancing overall application performance.
+User Experience Optimization: Learned techniques for optimizing user experience, including intuitive interface design and responsive feedback mechanisms, to create a more engaging and user-friendly application.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
++ Improvement that can be done :
 
-### `npm run eject`
+AI-Driven Analysis: Incorporate artificial intelligence to automate video and audio analysis, reducing the need for manual review and enhancing the speed and accuracy of feedback.
+Scalability Enhancements: Improve the infrastructure to handle larger volumes of video uploads and simultaneous user access, ensuring the platform remains responsive and efficient as the user base grows.
+Advanced Search Features: Implement more sophisticated search capabilities, such as filtering by specific video content, user comments, or analytical insights, to help users find relevant content more efficiently.
+Mobile Optimization: Develop a mobile-friendly version or a dedicated mobile app to increase accessibility and convenience for users on mobile devices.
+Interactive Video Features: Introduce features such as clickable timestamps in video comments and annotations, allowing users to interact more dynamically with video content.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Running the Project:
+Backend
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Clone the Repository:
+Clone the project repository from GitHub to your local machine using the following command:
+      git clone :: https://github.com/Benah0987/Comm
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    2. Install Backend Dependencies:
+Run the following command to install backend dependencies using Bundler   
+                  bundle install or bundle i 
+    3. Set up the Database:
+Create the PostgreSQL database and run migrations to set up the required tables:
+         rails db:create db:migrate
 
-## Learn More
+    4. Start the Backend Server:
+Launch the Rails server to start the backend application:
+         rails server
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
 
-### Code Splitting
+Frontend:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+   5. Navigate to the Frontend Directory:
+Open a new terminal window and navigate to the frontend directory of the project:
+      Git clone:  https://github.com/Benah0987/comm-front
 
-### Analyzing the Bundle Size
+  6.Install Frontend Dependencies:
+Install frontend dependencies using npm or yarn:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+      npm install or yarn install
+  7. Start the Frontend Development Server:
+Start the development server for the frontend application.This server will run on port 4000 to avoid conflicts with the backend server::
+       npm start
+   8.Access the Application:
+Once both the backend and frontend servers are running, open your web browser and navigate to http://localhost:4000 to access the application.
+Video or Image:
 
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- "Dive deeper by watching our video here:Comm Web App
+[Comm Web App] 
